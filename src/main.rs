@@ -1,37 +1,48 @@
 mod pentry;
 
-use core::ascii;
-use std::vec;
-
 use crate::pentry::prompt;
-use crate::pentry::read_password_from_file;
+use crate::pentry::read_passwords_from_file;
+use crate::pentry::ServiceInfo;
 
 fn clr() {
-    print!("{}[2J",27 as char);
-
+    print!("{}[2J", 27 as char);
 }
-
-fn main(){
+fn main() {
     clr();
-    let ascii = r#"
-     
-    ______            ___  _______   __ __|  |_/  |_ 
-    \____ \    ______ \  \/ /\__  \ |  |  \  |\   __\
-    |  |_> >  /_____/  \   /  / __ \|  |  /  |_|  |  
-    |   __/             \_/  (____  /____/|____/__|  
-    |__|                          \/                 
-    "#;
-    
-    println!("{ascii}");
-
+    println!(
+        "              _                                       _                                 "
+    );
+    println!("            /' `\\                      /'            ' )       )                   /'  /'");
+    println!(
+        "          /'     )                 --/'--             /      _/                  /'--/'--"
+    );
+    println!(
+        "        /' (___,/'        ____     /'                /    _/~____              /'  /'   "
+    );
+    println!(
+        "      /'   ;   /'    /  /'    )--/' /'    /         /  _/~ /'    )  /'    /  /'  /'     "
+    );
+    println!(
+        "    /'    /' /'    /'  '---,   /' /'    /'         /_/~  /'    /' /'    /' /'  /'       "
+    );
+    println!(
+        "(,/'     (_,(___,/(__(___,/   (__(___,/(__        /~    (___,/(__(___,/(__(__ (__       "
+    );
+    println!(
+        "                                    /'                                                  "
+    );
+    println!(
+        "                            /     /'                                                    "
+    );
+    println!(
+        "                           (___,/'                                                      "
+    );
     loop {
-        println!("Pass Manager Menu:");
+        println!("Password Manager Menu:");
         println!("1. Add Entry");
-        println!("2. List Entry");
-        println!("3. Search Entry");
+        println!("2. List Entries");
+        println!("3. Search");
         println!("4. Quit");
-        
-
 
         let mut choice = String::new();
         std::io::stdin().read_line(&mut choice).unwrap();
@@ -40,61 +51,53 @@ fn main(){
             "1" => {
                 clr();
                 let entry = ServiceInfo::new(
-                    
-                )
-
+                    prompt("Service :"),
+                    prompt("Username :"),
+                    prompt("Password :"),
+                );
+                println!("Entry added successfully.");
+                entry.write_to_file();
             }
-            "2" =>{
+            "2" => {
                 clr();
-                let services = read_password_from_file().unwrap_or_else(|err|{
-                    eprintln!("Error reading password:{}", err);
+                let services = read_passwords_from_file().unwrap_or_else(|err| {
+                    eprintln!("Error reading passwords: {}", err);
                     Vec::new()
                 });
-                for item in &services{
+                for item in &services {
                     println!(
-                    "Service = {}
-                    - Username : {}
-                    - Password : {}",
-                    item.service, item.username, item.password
-                );
-            }
-
-
+                        "Service = {}
+    - Username : {} 
+    - Password : {}",
+                        item.service, item.username, item.password
+                    );
+                }
             }
             "3" => {
                 clr();
-                let services = read_password_from_file().unwrap_or_else(|err|{
-                    eprintln!("Error reading password:{}", err);
+                let services = read_passwords_from_file().unwrap_or_else(|err| {
+                    eprintln!("Error reading passwords: {}", err);
                     Vec::new()
                 });
                 let search = prompt("Search :");
-                for item in &services{
-                    if item.service.as_str() == search.as_str(){
+                for item in &services {
+                    if item.service.as_str() == search.as_str() {
                         println!(
                             "Service = {}
-                            - Username : {}
-                            - Password : {}",
+    - Username : {} 
+    - Password : {}",
                             item.service, item.username, item.password
                         );
                     }
                 }
             }
-            "4" =>{
+            "4" => {
                 clr();
                 println!("Goodbye!");
                 break;
-
             }
-            _ => println!("Invalid Choice.")
+            _ => println!("Invalid choice."),
         }
-        println!("\n\n")
-
-
-
-
-
-
+        println!("\n\n");
     }
-
-
 }
